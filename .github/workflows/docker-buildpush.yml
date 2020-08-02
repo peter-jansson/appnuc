@@ -1,0 +1,16 @@
+name: Docker Image Build and Push
+
+on:
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Login to DockerHub Registry
+      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+    - name: Build Docker image jansson/appnuc
+      run: docker build . --file Dockerfile --tag jansson/appnuc
+    - name: Push Docker image jansson/appnuc
+      run: docker push jansson/appnuc
