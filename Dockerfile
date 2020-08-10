@@ -52,6 +52,7 @@ FROM base_1 AS base_2
 # Install Dropbox and the script to control it.
 RUN cd ~ && wget -q -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
 RUN curl -s -o /usr/bin/dropbox.py "https://www.dropbox.com/download?dl=packages/dropbox.py" && chmod a+x /usr/bin/dropbox.py
+RUN echo "echo Please run ~/.dropbox-dist/dropboxd to start the Dropbox daemon. You will be prompted to link your account." > /etc/profile.d/greeting.sh
 
 
 #-------------------------------------------------------------------------------
@@ -95,9 +96,12 @@ COPY --from=geant4_build /etc/profile.d/geant4.sh /etc/profile.d
 
 #-------------------------------------------------------------------------------
 # Enable access to the ssh server, enable and configure root login.
+# Inspiration from https://docs.docker.com/engine/examples/running_ssh_service/#run-a-test_sshd-container
 RUN echo "root:password" | chpasswd
 RUN echo "PermitRootLogin yes" >> /etc/ssh/sshd_config && echo "AddressFamily inet" >> /etc/ssh/sshd_config
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 EXPOSE 22
 
 WORKDIR /root
-CMD ["echo","Please run '~/.dropbox-dist/dropboxd' to start the Dropbox daemon. You will be prompted to link your account."]
+CMD ["/usr/sbin/sshd", "-D"]
