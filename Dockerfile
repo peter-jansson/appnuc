@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
        apt-utils \
        bash \
        bc \
+       binutils \
        build-essential \
        cmake \
        curl \
@@ -19,6 +20,10 @@ RUN apt-get update && apt-get install -y \
        libcanberra-gtk-module \
        libcurl4-openssl-dev \
        libssl-dev \
+       libx11-dev \
+       libxext-dev \
+       libxft-dev \
+       libxpm-dev \
        mercurial \
        openssh-server \
        openssl \
@@ -95,20 +100,18 @@ COPY --from=geant4_build /usr/local/geant4.${GEANT4_VERSION} /usr/local/geant4.$
 COPY --from=geant4_build /etc/profile.d/geant4.sh /etc/profile.d
 
 #-------------------------------------------------------------------------------
-# Build and install Root.
-FROM geant4_installed AS root_build
+# Install pre-compiled Root.
+FROM geant4_installed AS root_install
 WORKDIR /tmp
 ENV ROOT root_v6.22.02
-RUN git clone --branch v6-22-00-patches https://github.com/root-project/root.git
-WORKDIR /tmp/build
-RUN cmake -DCMAKE_INSTALL_PREFIX=/usr/local/${ROOT} -DCMAKE_BUILD_TYPE=Release -Droofit=ON /tmp/root
-RUN cmake --build . -j
-RUN cmake --install .
+RUN wget https://root.cern/download/root_v6.22.02.Linux-ubuntu20-x86_64-gcc9.3.tar.gz -O ${ROOT}.tar.gz
+RUN tar -xzf ${ROOT}.tar.gz
+RUN mv root /usr/local/${ROOT}
 RUN echo ". /usr/local/${ROOT}/bin/thisroot.sh" >> /etc/profile.d/${ROOT}.sh
 
 FROM geant4_installed AS root_installed
-COPY --from=root_build /usr/local/${ROOT} /usr/local/${ROOT}
-COPY --from=root_build /etc/profile.d/${ROOT}.sh /etc/profile.d
+COPY --from=root_install /usr/local/${ROOT} /usr/local/${ROOT}
+COPY --from=root_install /etc/profile.d/${ROOT}.sh /etc/profile.d
 
 #-------------------------------------------------------------------------------
 # Enable access to the ssh server, enable and configure root login.
