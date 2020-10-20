@@ -121,6 +121,8 @@ RUN echo "root:password" | chpasswd
 RUN echo "PermitRootLogin yes" >> /etc/ssh/sshd_config && echo "AddressFamily inet" >> /etc/ssh/sshd_config
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+# https://askubuntu.com/questions/1110828/ssh-failed-to-start-missing-privilege-separation-directory-var-run-sshd
+RUN systemd-tmpfiles --create
 EXPOSE 22
 
 WORKDIR /root
