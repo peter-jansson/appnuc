@@ -55,7 +55,7 @@ RUN mkdir -p /root/.local/share
 FROM base_1 AS base_2
 
 # Install Dropbox and the script to control it.
-RUN cd ~ && wget -q -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
+RUN cd ~ && wget --no-hsts -q -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
 RUN curl -s -o /usr/bin/dropbox.py "https://www.dropbox.com/download?dl=packages/dropbox.py" && chmod a+x /usr/bin/dropbox.py
 RUN echo "echo Please run ~/.dropbox-dist/dropboxd to start the Dropbox daemon. You will be prompted to link your account." > /etc/profile.d/greeting.sh
 
@@ -104,7 +104,7 @@ COPY --from=geant4_build /etc/profile.d/geant4.sh /etc/profile.d
 FROM geant4_installed AS root_install
 WORKDIR /tmp
 ENV ROOT root_v6.22.02
-RUN wget -q https://root.cern/download/${ROOT}.Linux-ubuntu20-x86_64-gcc9.3.tar.gz -O ${ROOT}.tar.gz
+RUN wget --no-hsts -q https://root.cern/download/${ROOT}.Linux-ubuntu20-x86_64-gcc9.3.tar.gz -O ${ROOT}.tar.gz
 RUN tar -xzf ${ROOT}.tar.gz
 RUN mv root /usr/local/${ROOT}
 RUN echo ". /usr/local/${ROOT}/bin/thisroot.sh" >> /etc/profile.d/${ROOT}.sh
