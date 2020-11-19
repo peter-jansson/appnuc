@@ -115,6 +115,19 @@ COPY --from=root_install /usr/local/${ROOT} /usr/local/${ROOT}
 COPY --from=root_install /etc/profile.d/${ROOT}.sh /etc/profile.d
 
 #-------------------------------------------------------------------------------
+# Download, build and install the XCOM program from NIST.
+
+FROM root_installed AS xcom_install
+WORKDIR /usr/local
+RUN wget --no-hsts -q https://physics.nist.gov/PhysRefData/Xcom/XCOM.tar.gz
+RUN tar -xzf XCOM.tar.gz
+WORKDIR /usr/local/XCOM
+RUN gfortran -std=legacy XCOM.f -o XCOM
+
+FROM root_installed AS xcom_installed
+COPY --from=xcom_install /usr/local/XCOM /usr/local/XCOM
+
+#-------------------------------------------------------------------------------
 # Enable access to the ssh server, enable and configure root login.
 # Inspiration from https://docs.docker.com/engine/examples/running_ssh_service/#run-a-test_sshd-container
 RUN echo "root:password" | chpasswd
