@@ -27,6 +27,7 @@ RUN apt-get update && apt-get install -y \
        mercurial \
        openssh-server \
        openssl \
+       postgresql-server-dev-12 \
        python3 \
        python3-pip \
        python3-tk \
