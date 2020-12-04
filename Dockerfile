@@ -67,7 +67,7 @@ RUN echo "echo Please run ~/.dropbox-dist/dropboxd to start the Dropbox daemon. 
 
 FROM base_2 AS geant4_base
 
-ENV GEANT4_VERSION 10.06.p03
+ENV GEANT4_VERSION 10.07
 
 #-------------------------------------------------------------------------------
 FROM geant4_base AS geant4_build
@@ -75,7 +75,7 @@ FROM geant4_base AS geant4_build
 WORKDIR /tmp/geant4/source
 
 RUN curl -s -S -o geant4.${GEANT4_VERSION}.tar.gz \
-   https://geant4-data.web.cern.ch/geant4-data/releases/geant4.${GEANT4_VERSION}.tar.gz
+   https://geant4-data.web.cern.ch/releases/geant4.${GEANT4_VERSION}.tar.gz
 RUN tar -xzf geant4.${GEANT4_VERSION}.tar.gz
 
 WORKDIR /tmp/geant4/build
