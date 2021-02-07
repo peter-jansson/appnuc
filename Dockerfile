@@ -1,8 +1,6 @@
 FROM jansson/pj as base_1
 
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
        alpine \
        apt-utils \
        bash \
@@ -67,7 +65,7 @@ RUN echo "echo Please run ~/.dropbox-dist/dropboxd to start the Dropbox daemon. 
 
 FROM base_2 AS geant4_base
 
-ENV GEANT4_VERSION 10.07
+ENV GEANT4_VERSION 10.07.p01
 
 #-------------------------------------------------------------------------------
 FROM geant4_base AS geant4_build
