@@ -138,4 +138,6 @@ RUN systemd-tmpfiles --create
 EXPOSE 22
 
 WORKDIR /root
-CMD ["/usr/sbin/sshd", "-D"]
+COPY docker-entrypoint.sh /
+RUN chmod u+x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
