@@ -50,53 +50,39 @@ RUN pip3 install bumps dropbox cx_Oracle lmfit matplotlib numpy pandas reportlab
 # To get rid of harmless warnings from gvim.
 RUN mkdir -p /root/.local/share
 
-#------------------------------------------------------------------------------
-FROM base_1 AS base_2
-
-# Install Dropbox and the script to control it.
-RUN cd ~ && wget --no-hsts -q -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
-RUN curl -s -o /usr/bin/dropbox.py "https://www.dropbox.com/download?dl=packages/dropbox.py" && chmod a+x /usr/bin/dropbox.py
-RUN echo "echo Please run ~/.dropbox-dist/dropboxd to start the Dropbox daemon. You will be prompted to link your account." > /etc/profile.d/greeting.sh
-
-
 #-------------------------------------------------------------------------------
 # Build and install the Geant4 simulation toolkit.
 # http://geant4.cern.ch/
 
-FROM base_2 AS geant4_base
+FROM base_1 AS geant4_base
 
-ENV GEANT4_VERSION 10.07.p01
+ENV G4 geant4.10.07.p01
 
-#-------------------------------------------------------------------------------
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 FROM geant4_base AS geant4_build
 
-WORKDIR /tmp/geant4/source
+WORKDIR /tmp
+RUN curl -s -S -o ${G4}.tar.gz \
+    https://geant4-data.web.cern.ch/releases/${G4}.tar.gz
+RUN tar -xzf ${G4}.tar.gz
 
-RUN curl -s -S -o geant4.${GEANT4_VERSION}.tar.gz \
-   https://geant4-data.web.cern.ch/releases/geant4.${GEANT4_VERSION}.tar.gz
-RUN tar -xzf geant4.${GEANT4_VERSION}.tar.gz
-
-WORKDIR /tmp/geant4/build
-
-RUN cmake /tmp/geant4/source/geant4.${GEANT4_VERSION} \
-       -DCMAKE_INSTALL_PREFIX=/usr/local/geant4.${GEANT4_VERSION} \
+WORKDIR /build
+RUN cmake /tmp/${G4} \
+       -DCMAKE_BUILD_TYPE:STRING=Release \
+       -DCMAKE_INSTALL_PREFIX=/usr/local/${G4} \
        -DGEANT4_USE_SYSTEM_EXPAT=OFF \
        -DGEANT4_BUILD_MULTITHREADED=ON \
        -DGEANT4_INSTALL_DATA=ON \
        -DGEANT4_USE_OPENGL_X11=ON \
        -DGEANT4_USE_RAYTRACER_X11=ON \
        -DGEANT4_USE_XM=ON
+RUN cmake --build /build --config Release
+RUN cmake --install /build --config Release --strip
 
-RUN \
-   make && \
-   make install && \
-   echo ". /usr/local/geant4.${GEANT4_VERSION}/bin/geant4.sh" >> /etc/profile.d/geant4.sh && \
-   echo ". \${G4NEUTRONHPDATA}/../../geant4make/geant4make.sh" >> /etc/profile.d/geant4.sh
-
-#-------------------------------------------------------------------------------
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 FROM geant4_base AS geant4_installed
-COPY --from=geant4_build /usr/local/geant4.${GEANT4_VERSION} /usr/local/geant4.${GEANT4_VERSION}
-COPY --from=geant4_build /etc/profile.d/geant4.sh /etc/profile.d
+COPY --from=geant4_build /usr/local/${G4} /usr/local/${G4}
+RUN echo ". /usr/local/${G4}/bin/geant4.sh" > /etc/profile.d/${G4}.sh
 
 #-------------------------------------------------------------------------------
 # Install pre-compiled Root.
@@ -106,12 +92,11 @@ ENV ROOT root_v6.22.06
 RUN wget --no-hsts -q https://root.cern/download/${ROOT}.Linux-ubuntu20-x86_64-gcc9.3.tar.gz -O ${ROOT}.tar.gz
 RUN tar -xzf ${ROOT}.tar.gz
 RUN mv root /usr/local/${ROOT}
-RUN echo ". /usr/local/${ROOT}/bin/thisroot.sh" >> /etc/profile.d/${ROOT}.sh
 
 FROM geant4_installed AS root_installed
 ENV ROOT root_v6.22.06
 COPY --from=root_install /usr/local/${ROOT} /usr/local/${ROOT}
-COPY --from=root_install /etc/profile.d/${ROOT}.sh /etc/profile.d
+RUN echo ". /usr/local/${ROOT}/bin/thisroot.sh" > /etc/profile.d/${ROOT}.sh
 
 #-------------------------------------------------------------------------------
 # Download, build and install the XCOM program from NIST.
