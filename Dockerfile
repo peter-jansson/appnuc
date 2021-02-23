@@ -68,7 +68,6 @@ RUN tar -xzf ${G4}.tar.gz
 
 WORKDIR /build
 RUN cmake /tmp/${G4} \
-       -DCMAKE_BUILD_TYPE:STRING=Release \
        -DCMAKE_INSTALL_PREFIX=/usr/local/${G4} \
        -DGEANT4_USE_SYSTEM_EXPAT=OFF \
        -DGEANT4_BUILD_MULTITHREADED=ON \
