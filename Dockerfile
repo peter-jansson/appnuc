@@ -45,8 +45,9 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
        xorg-dev \
        && rm -rf /var/lib/apt/lists/*
 # Install some Python libraries that are useful.
-RUN pip3 install bumps dropbox cx_Oracle lmfit matplotlib numpy pandas reportlab scipy \
-       && rm -rf /root/.cache
+RUN pip3 install bumps dropbox cx_Oracle lmfit matplotlib numpy pandas \
+    reportlab scipy \
+    && rm -rf /root/.cache
 # To get rid of harmless warnings from gvim.
 RUN mkdir -p /root/.local/share
 
@@ -76,25 +77,31 @@ RUN cmake /tmp/${G4} \
        -DGEANT4_USE_OPENGL_X11=ON \
        -DGEANT4_USE_RAYTRACER_X11=ON \
        -DGEANT4_USE_XM=ON
-RUN cmake --build /build --config Release
+RUN cmake --build /build -j $(expr $(nproc) - 1) --config Release
 RUN cmake --install /build --config Release --strip
+RUN echo ". /usr/local/${G4}/bin/geant4.sh" > /etc/profile.d/${G4}.sh
+RUN echo ". \${G4LEDATA}/../../geant4make/geant4make.sh" \
+        >> /etc/profile.d/${G4}.sh
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 FROM geant4_base AS geant4_installed
 COPY --from=geant4_build /usr/local/${G4} /usr/local/${G4}
-RUN echo ". /usr/local/${G4}/bin/geant4.sh" > /etc/profile.d/${G4}.sh
+COPY --from=geant4_build /etc/profile.d/${G4}.sh /etc/profile.d
 
 #-------------------------------------------------------------------------------
 # Install pre-compiled Root.
+
+ENV ROOT root_v6.22.06
+
 FROM geant4_installed AS root_install
 WORKDIR /tmp
-ENV ROOT root_v6.22.06
-RUN wget --no-hsts -q https://root.cern/download/${ROOT}.Linux-ubuntu20-x86_64-gcc9.3.tar.gz -O ${ROOT}.tar.gz
+RUN wget -q \
+    https://root.cern/download/${ROOT}.Linux-ubuntu20-x86_64-gcc9.3.tar.gz \
+    -O ${ROOT}.tar.gz
 RUN tar -xzf ${ROOT}.tar.gz
 RUN mv root /usr/local/${ROOT}
 
 FROM geant4_installed AS root_installed
-ENV ROOT root_v6.22.06
 COPY --from=root_install /usr/local/${ROOT} /usr/local/${ROOT}
 RUN echo ". /usr/local/${ROOT}/bin/thisroot.sh" > /etc/profile.d/${ROOT}.sh
 
@@ -103,7 +110,7 @@ RUN echo ". /usr/local/${ROOT}/bin/thisroot.sh" > /etc/profile.d/${ROOT}.sh
 
 FROM root_installed AS xcom_install
 WORKDIR /usr/local
-RUN wget --no-hsts -q https://physics.nist.gov/PhysRefData/Xcom/XCOM.tar.gz
+RUN wget -q https://physics.nist.gov/PhysRefData/Xcom/XCOM.tar.gz
 RUN tar -xzf XCOM.tar.gz
 WORKDIR /usr/local/XCOM
 RUN gfortran -std=legacy XCOM.f -o XCOM
@@ -113,12 +120,14 @@ COPY --from=xcom_install /usr/local/XCOM /usr/local/XCOM
 
 #-------------------------------------------------------------------------------
 # Enable access to the ssh server, enable and configure root login.
-# Inspiration from https://docs.docker.com/engine/examples/running_ssh_service/#run-a-test_sshd-container
 RUN echo "root:password" | chpasswd
-RUN echo "PermitRootLogin yes" >> /etc/ssh/sshd_config && echo "AddressFamily inet" >> /etc/ssh/sshd_config
+RUN echo "PermitRootLogin yes" >> /etc/ssh/sshd_config \
+    && echo "AddressFamily inet" >> /etc/ssh/sshd_config
 # SSH login fix. Otherwise user is kicked off after login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-# https://askubuntu.com/questions/1110828/ssh-failed-to-start-missing-privilege-separation-directory-var-run-sshd
+RUN sed \
+   's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' \
+   -i /etc/pam.d/sshd
+# https://jansson.net/url/?h=f5968229
 RUN systemd-tmpfiles --create
 EXPOSE 22
 
