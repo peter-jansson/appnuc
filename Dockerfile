@@ -17,12 +17,14 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
        libboost-all-dev \
        libcanberra-gtk-module \
        libcurl4-openssl-dev \
+       libgl1-mesa-glx \
        libssl-dev \
        libx11-dev \
        libxext-dev \
        libxft-dev \
        libxpm-dev \
        mercurial \
+       mesa-utils \
        openssh-server \
        openssl \
        postgresql-server-dev-12 \
@@ -43,6 +45,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
        libmotif-dev \
        xorg \
        xorg-dev \
+       xserver-xorg-video-nvidia-390 \
        && rm -rf /var/lib/apt/lists/*
 # Install some Python libraries that are useful.
 RUN pip3 install bumps dropbox cx_Oracle lmfit matplotlib numpy pandas \
