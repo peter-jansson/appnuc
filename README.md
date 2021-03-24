@@ -9,6 +9,6 @@ The Dockerfile can be used to build an Ubuntu based Docker image with a bunch of
 * [Root](https://root.cern.ch/) data analysis framework
 * [XCOM](https://dx.doi.org/10.18434/T48G6X) program from NIST
 
-Docker hub contains the [latest image](https://hub.docker.com/r/jansson/appnuc) built using the Dockerfile, the image can pulled into the local Docker registry by the command `docker pull jansson/appnuc`.
+Docker hub contains the [image](https://hub.docker.com/r/jansson/appnuc) built using the Dockerfile, which can pulled into the local Docker registry by the command `docker pull jansson/appnuc`.
 
 The image can be started in a container by, e.g., the command `docker run --rm -it jansson/appnuc bash -l`. Significantly more information on how to mount a local file system to the container as well as other command line options is available in the [Docker documentation](https://docs.docker.com/engine/reference/commandline/cli/).
