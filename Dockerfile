@@ -1,4 +1,4 @@
-FROM jansson/pj as base_1
+FROM ubuntu:20.04 AS base_1
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
        alpine \
