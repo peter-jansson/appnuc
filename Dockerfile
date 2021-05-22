@@ -29,7 +29,15 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
        openssl \
        postgresql-server-dev-12 \
        python3 \
+       python3-lmfit \
+       python3-matplotlib \
+       python3-numpy \
+       python3-pandas \
        python3-pip \
+       python3-reportlab \
+       python3-scipy \
+       python3-sklearn \
+       python3-sklearn-pandas \
        python3-tk \
        python3-venv \
        r-base \
@@ -47,10 +55,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
        xorg-dev \
        xserver-xorg-video-nvidia-390 \
        && rm -rf /var/lib/apt/lists/*
-# Install some Python libraries that are useful.
-RUN pip3 install bumps dropbox cx_Oracle lmfit matplotlib numpy pandas \
-    reportlab scipy \
-    && rm -rf /root/.cache
+
 # To get rid of harmless warnings from gvim.
 RUN mkdir -p /root/.local/share
 
