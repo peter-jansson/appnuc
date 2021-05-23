@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Enable access to the ssh server, enable and configure root login.
-# Need to run with superuser rights.
 # $1 : root password to set
 
 echo "root:$1" | chpasswd

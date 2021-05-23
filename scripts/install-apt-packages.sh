@@ -1,10 +1,6 @@
-# Need to run with superuser rights.
-
 apt-get update
 
-DEBIAN_FRONTEND=noninteractive
-
-apt-get install -y \
+DEBIAN_FRONTEND=noninteractive apt-get install -y \
     alpine \
     apt-utils \
     bash \
@@ -62,4 +58,4 @@ rm -rf /var/lib/apt/lists/*
 
 apt-get clean
 
-echo 'mkdir -p ~/.local/share' | sudo tee -a /etc/profile.d/avoid-harmless-gvim-warning.sh
+echo 'mkdir -p ~/.local/share' > /etc/profile.d/avoid-harmless-gvim-warning.sh

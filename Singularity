@@ -2,12 +2,10 @@ Bootstrap: docker
 From: ubuntu:20.04
 
 %setup
-    cp scripts/* ${SINGULARITY_ROOTFS}/tmp/
+    cp scripts/* ${SINGULARITY_ROOTFS}/usr/local/bin/
 
 %post
-    cd /tmp
-    ./setup.sh password
-    rm -rf /tmp/*
+    setup.sh password
 
 %startscript
     service ssh start

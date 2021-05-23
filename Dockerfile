@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-COPY scripts/* /tmp/
+COPY scripts/* /usr/local/bin/
 
 WORKDIR /tmp
 

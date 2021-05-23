@@ -26,10 +26,10 @@ cmake \
     ../
 
 cmake --build ./ -j $(expr $(nproc) - 1) --config Release
-sudo cmake --install ./ --config Release --strip
+cmake --install ./ --config Release --strip
 
 echo ". /usr/local/${G4}/bin/geant4.sh" > ${G4}.sh
 echo ". \${G4LEDATA}/../../geant4make/geant4make.sh" >> ${G4}.sh
-sudo cp ${G4}.sh /etc/profile.d/
+cp ${G4}.sh /etc/profile.d/
 
 rm -rf ${D}
