@@ -3,7 +3,7 @@
 # Build and install the Geant4 simulation toolkit.
 # http://geant4.cern.ch/
 
-G4=geant4.10.07.p01
+G4=geant4.10.07.p02
 
 D=$(mktemp -d)
 cd ${D}
