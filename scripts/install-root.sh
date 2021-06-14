@@ -2,7 +2,7 @@
 
 # Install pre-compiled Root.
 
-ROOT=root_v6.22.06
+ROOT=root_v6.24.00
 
 D=$(mktemp -d)
 cd ${D}
