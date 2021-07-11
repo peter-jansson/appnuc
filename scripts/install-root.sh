@@ -6,10 +6,13 @@ installdir=/usr/local/root
 mkdir -p $installdir
 
 D=$(mktemp -d)
+
 cd ${D}
+git clone https://github.com/root-project/root.git
+cd root
+git checkout v6-24-02
 
-git clone --branch latest-stable https://github.com/root-project/root.git root_src
-
+cd ${D}
 mkdir -p root_build
 cd root_build
 cmake -DCMAKE_INSTALL_PREFIX=../root_src -DDCMAKE_CXX_STANDARD=17
