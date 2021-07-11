@@ -15,7 +15,7 @@ git checkout v6-24-02
 cd ${D}
 mkdir -p root_build
 cd root_build
-cmake -DCMAKE_INSTALL_PREFIX=../root_src -DDCMAKE_CXX_STANDARD=17
+cmake -DCMAKE_INSTALL_PREFIX=../root -DDCMAKE_CXX_STANDARD=17
 cmake --build . --target install
 
 echo ". $installdir/bin/thisroot.sh" > /etc/profile.d/root.sh
