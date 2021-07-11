@@ -9,6 +9,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     cmake \
     curl \
     doxygen \
+    dpkg-dev \
     ffmpeg \
     fossil \
     git \
@@ -19,6 +20,8 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     libcanberra-gtk-module \
     libcurl4-openssl-dev \
     libgl1-mesa-glx \
+    libjpeg \
+    libpng \
     libssl-dev \
     libx11-dev \
     libxext-dev \
