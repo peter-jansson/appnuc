@@ -1,17 +1,20 @@
 #!/bin/bash
 
-# Install pre-compiled Root.
+# Install Root from source, using C++ 17 standard.
 
-ROOT=root_v6.24.00
+installdir=/usr/local/root
+mkdir -p $installdir
 
 D=$(mktemp -d)
 cd ${D}
 
-curl -s -S -L -o ${ROOT}.tar.gz https://root.cern/download/${ROOT}.Linux-ubuntu20-x86_64-gcc9.3.tar.gz
-tar -xzf ${ROOT}.tar.gz
-cp -r root /usr/local/${ROOT}
+git clone --branch latest-stable https://github.com/root-project/root.git root_src
 
-echo ". /usr/local/${ROOT}/bin/thisroot.sh" > ${ROOT}.sh
-cp ${ROOT}.sh /etc/profile.d/
+mkdir -p root_build
+cd root_build
+cmake -DCMAKE_INSTALL_PREFIX=../root_src -DDCMAKE_CXX_STANDARD=17
+cmake --build . --target install
+
+echo ". $installdir/bin/thisroot.sh" > /etc/profile.d/root.sh
 
 rm -rf ${D}
