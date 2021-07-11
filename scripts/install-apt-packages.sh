@@ -6,14 +6,15 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     bash \
     bc \
     binutils \
-    build-essential \
     cmake \
     curl \
     doxygen \
     ffmpeg \
     fossil \
     git \
+    gfortran-11 \
     gnuplot \
+    g++-11 \
     libboost-all-dev \
     libcanberra-gtk-module \
     libcurl4-openssl-dev \
@@ -23,11 +24,12 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     libxext-dev \
     libxft-dev \
     libxpm-dev \
+    make \
     mercurial \
     mesa-utils \
     openssh-server \
     openssl \
-    postgresql-server-dev-12 \
+    postgresql-server-dev-13 \
     python3 \
     python3-lmfit \
     python3-matplotlib \
