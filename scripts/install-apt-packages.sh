@@ -13,9 +13,9 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ffmpeg \
     fossil \
     git \
-    gfortran-11 \
+    gfortran \
     gnuplot \
-    g++-11 \
+    g++ \
     libboost-all-dev \
     libcanberra-gtk-module \
     libcurl4-openssl-dev \
