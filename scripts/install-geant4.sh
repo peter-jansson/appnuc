@@ -25,7 +25,7 @@ cmake \
     -DGEANT4_USE_XM=ON \
     ../
 
-cmake --build ./ -j $(expr $(nproc) - 1) --config Release
+cmake --build ./ -j --config Release
 cmake --install ./ --config Release --strip
 
 echo ". /usr/local/${G4}/bin/geant4.sh" > ${G4}.sh
