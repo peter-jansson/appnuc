@@ -16,7 +16,8 @@ cd ${D}
 mkdir -p root_build
 cd root_build
 cmake -DCMAKE_INSTALL_PREFIX=$installdir -DCMAKE_CXX_STANDARD=17 ../root
-cmake --build . -j $(expr $(nproc) - 1) --target install
+cmake --build . -j $(expr $(nproc) - 1)
+cmake --install .
 
 echo ". $installdir/bin/thisroot.sh" > /etc/profile.d/root.sh
 
