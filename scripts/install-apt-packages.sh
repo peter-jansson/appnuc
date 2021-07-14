@@ -6,28 +6,33 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     bash \
     bc \
     binutils \
-    build-essential \
     cmake \
     curl \
     doxygen \
+    dpkg-dev \
     ffmpeg \
     fossil \
     git \
+    gfortran \
     gnuplot \
+    g++ \
     libboost-all-dev \
     libcanberra-gtk-module \
     libcurl4-openssl-dev \
     libgl1-mesa-glx \
+    libjpeg-dev \
+    libpng-dev \
     libssl-dev \
     libx11-dev \
     libxext-dev \
     libxft-dev \
     libxpm-dev \
+    make \
     mercurial \
     mesa-utils \
     openssh-server \
     openssl \
-    postgresql-server-dev-12 \
+    postgresql-server-dev-13 \
     python3 \
     python3-lmfit \
     python3-matplotlib \

@@ -17,6 +17,7 @@ cd build
 
 cmake \
     -DCMAKE_INSTALL_PREFIX=/usr/local/${G4} \
+    -DGEANT4_BUILD_CXXSTD=17 \
     -DGEANT4_USE_SYSTEM_EXPAT=OFF \
     -DGEANT4_BUILD_MULTITHREADED=ON \
     -DGEANT4_INSTALL_DATA=ON \
@@ -25,7 +26,7 @@ cmake \
     -DGEANT4_USE_XM=ON \
     ../
 
-cmake --build ./ -j $(expr $(nproc) - 1) --config Release
+cmake --build ./ -j --config Release
 cmake --install ./ --config Release --strip
 
 echo ". /usr/local/${G4}/bin/geant4.sh" > ${G4}.sh
