@@ -17,4 +17,4 @@ The image can be started in a container by, e.g., the command `docker run --rm -
 ## Singularity
 A [Singularity](https://sylabs.io/) file containing the same containerized Ubuntu and software can be built using the Singularity definition file, named `Singularity`. E.g. using the command `sudo singularity build appnuc.sif Singularity` to build `appnuc.sif`.
 
-See the [Singularity user guide](https://sylabs.io/guides/3.7/user-guide/) for more information.
+See the [Singularity user guide](https://sylabs.io/guides/latest/user-guide/) for more information.
